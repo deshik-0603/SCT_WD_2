@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculator App</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #2d2d64, #1abc9c);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .calculator {
+      background-color: #ffffffdd;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      padding: 2rem;
+      width: 320px;
+    }
+
+    .display {
+      background: #1abc9c;
+      color: white;
+      font-size: 2rem;
+      padding: 1rem;
+      text-align: right;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+      overflow-x: auto;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+
+    button {
+      padding: 1rem;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 10px;
+      background: #2d2d64;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    button:hover {
+      background: #1abc9c;
+      transform: scale(1.05);
+    }
+
+    .equal {
+      background: #f39c12;
+      grid-column: span 2;
+    }
+
+    .clear {
+      background: #e74c3c;
+    }
+
+    .zero {
+      grid-column: span 2;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="calculator">
+    <div id="display" class="display">0</div>
+    <div class="buttons">
+      <button class="clear">C</button>
+      <button>←</button>
+      <button>/</button>
+      <button>*</button>
+      <button>7</button>
+      <button>8</button>
+      <button>9</button>
+      <button>-</button>
+      <button>4</button>
+      <button>5</button>
+      <button>6</button>
+      <button>+</button>
+      <button>1</button>
+      <button>2</button>
+      <button>3</button>
+      <button class="equal">=</button>
+      <button class="zero">0</button>
+      <button>.</button>
+    </div>
+  </div>
+
+  <script>
+    const display = document.getElementById('display');
+    const buttons = document.querySelectorAll('button');
+    let currentInput = '0';
+
+    function updateDisplay() {
+      display.textContent = currentInput;
+    }
+
+    function handleInput(value) {
+      if (value === 'C') {
+        currentInput = '0';
+      } else if (value === '←') {
+        currentInput = currentInput.slice(0, -1) || '0';
+      } else if (value === '=') {
+        try {
+          currentInput = eval(currentInput).toString();
+        } catch {
+          currentInput = 'Error';
+        }
+      } else {
+        if (currentInput === '0' || currentInput === 'Error') {
+          currentInput = value;
+        } else {
+          currentInput += value;
+        }
+      }
+      updateDisplay();
+    }
+
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        handleInput(button.textContent);
+      });
+    });
+
+    document.addEventListener('keydown', (e) => {
+      const allowedKeys = '0123456789+-*/.=BackspaceEntercC';
+      if (!allowedKeys.includes(e.key)) return;
+
+      if (e.key === 'Enter') {
+        handleInput('=');
+      } else if (e.key === 'Backspace') {
+        handleInput('←');
+      } else if (e.key.toLowerCase() === 'c') {
+        handleInput('C');
+      } else {
+        handleInput(e.key);
+      }
+    });
+
+    updateDisplay();
+  </script>
+
+</body>
+</html>
